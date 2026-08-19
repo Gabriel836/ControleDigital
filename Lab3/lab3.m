@@ -1,3 +1,4 @@
+%% 
 clear
 close all
 
@@ -77,5 +78,26 @@ step(R*Gz);
 legend('Contínuo', 'Discreto')
 
 %------------------------------------------------------
-% QUESTAO 6
+% QUESTAO 7
 %------------------------------------------------------
+
+[num, den] = tfdata(G, 'v');
+disp("Coeficientes do numerador da TF")
+disp(num)
+
+disp("Coeficientes do denominador da TF")
+disp(den)
+
+%------------------------------------------------------
+% QUESTAO 8
+%------------------------------------------------------
+%% 
+
+figure
+plot(out.y_c.Time, out.y_c.Data, 'b')
+title("Resposta do sistema ao degrau (simulado no Simulink)")
+grid
+
+hold on;
+stairs(out.y_d.Time, out.y_d.Data, 'r');
+legend('Contínuo', 'Discreto')
