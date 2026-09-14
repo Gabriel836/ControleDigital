@@ -5,7 +5,7 @@ close all
 % -----------------------
 
 % Parametros
-K = 1;
+K = 5.8966;
 wn = 0.77;
 zeta = 1.013; % Sobreamortecido (zeta > 1)
 R = 1.17;
@@ -39,7 +39,9 @@ grid
 % ----------------------------
 wa = bandwidth(G);
 wf = bandwidth(Gmf);
+disp("Largura de banda malha aberta: ")
 disp(wa);
+disp("Largura de banda malha fechada: ")
 disp(wf);
 
 %----------------------------
@@ -98,6 +100,48 @@ hold on;
 stairs(out.u_d.Time, out.u_d.Data, 'r');
 legend('Contínuo', 'Discreto')
 
+% ------------------------
+% exercicio 11
+% ------------------------
+
+% Instante em que o disturbio eh aplicado (Tabela 1)
+t1 = 12;
+
+% Erro em regime permanente ANTES do disturbio (continuo)
+% Pega o ultimo instante de e_c antes de t1
+idx_antes_c = find(out.e_c.Time < t1, 1, 'last');
+ess_antes_c = out.e_c.Data(idx_antes_c);
+
+% Erro em regime permanente ANTES do disturbio (discreto)
+idx_antes_d = find(out.e_d.Time < t1, 1, 'last');
+ess_antes_d = out.e_d.Data(idx_antes_d);
+
+% Erro em regime permanente APOS o disturbio (continuo)
+% Pega o ultimo instante da simulacao (fim, t = 24s)
+ess_depois_c = out.e_c.Data(end);
+
+% Erro em regime permanente APOS o disturbio (discreto)
+ess_depois_d = out.e_d.Data(end);
+
+disp('Erro absoluto em regime permanente ANTES do disturbio (continuo):')
+disp(ess_antes_c)
+disp('Erro absoluto em regime permanente ANTES do disturbio (discreto):')
+disp(ess_antes_d)
+disp('Erro absoluto em regime permanente APOS o disturbio (continuo):')
+disp(ess_depois_c)
+disp('Erro absoluto em regime permanente APOS o disturbio (discreto):')
+disp(ess_depois_d)
+
+% Erros em porcentagem em relacao ao degrau de referencia r
+disp('Erro percentual ANTES do disturbio (continuo):')
+disp(100*ess_antes_c/R)
+disp('Erro percentual ANTES do disturbio (discreto):')
+disp(100*ess_antes_d/R)
+disp('Erro percentual APOS o disturbio (continuo):')
+disp(100*ess_depois_c/R)
+disp('Erro percentual APOS o disturbio (discreto):')
+disp(100*ess_depois_d/R)
+
 % ---------------------------------------
 % exercicio 12
 % ------------------------------------------------
@@ -126,11 +170,11 @@ T0 = T0f;
 Gz = c2d(G, T0, 'zoh');
 Gmfz = feedback(K*Gz, 1);
 
-disp('Planta discreta Gz')
-Gz
+disp('Malha aberta discreta Gz')
+disp(Gz)
 
 disp('Malha fechada discreta Gmfz')
-Gmfz
+disp(Gmfz)
 
 % ----------------------------------------
 % EXERCICIO 17
@@ -166,6 +210,80 @@ step(R*Gmfz, 24)
 
 grid on
 title('Resposta ao degrau da malha fechada')
+xlabel('Tempo (s)')
+ylabel('Saída y')
+legend('Contínuo', 'Discreto', 'Location', 'best')
+
+% ----------------------------------------
+% EXERCICIO 20
+% ----------------------------------------
+
+figure
+
+step(R*Gmf, 24)
+hold on
+step(R*Gmfz, 24)
+
+grid on
+title('Resposta ao degrau da malha fechada para K=8')
+xlabel('Tempo (s)')
+ylabel('Saída y')
+legend('Contínuo', 'Discreto', 'Location', 'best')
+
+% ----------------------------------------
+% EXERCICIO 20
+% ----------------------------------------
+
+figure
+
+step(R*Gmf, 24)
+hold on
+step(R*Gmfz, 24)
+
+grid on
+title('Resposta ao degrau da malha fechada para K=8')
+xlabel('Tempo (s)')
+ylabel('Saída y')
+legend('Contínuo', 'Discreto', 'Location', 'best')
+
+% ----------------------------------------
+% EXERCICIO 23
+% ----------------------------------------
+
+Kp_vals = [1 5 8];
+d = -0.15;  
+r = R;       
+
+ess_antes = r ./ (1+Kp_vals);
+ess_depois = (r-d) ./ (1+Kp_vals);
+
+ess_antes_pct = 100*ess_antes/r;
+ess_depois_pct = 100*ess_depois/r;
+
+table(Kp_vals', ess_antes', ess_depois', ess_antes_pct', ess_depois_pct', ...
+    'VariableNames', {'Kp','ess_antes','ess_depois','ess_antes_pct','ess_depois_pct'})
+
+% ----------------------------------------
+% EXERCICIO 27
+% ----------------------------------------
+
+ess_pct = 14.5; 
+Kp_27 = 100/ess_pct - 1;
+disp('Kp necessario para ess% especificado:')
+disp(Kp_27)
+
+% ----------------------------------------
+% EXERCICIO 28
+% ----------------------------------------
+
+figure
+
+step(R*Gmf, 24)
+hold on
+step(R*Gmfz, 24)
+
+grid on
+title('Resposta ao degrau da malha fechada para K=5.8966')
 xlabel('Tempo (s)')
 ylabel('Saída y')
 legend('Contínuo', 'Discreto', 'Location', 'best')
