@@ -60,6 +60,24 @@ disp("Dd:")
 disp(Dd)
 
 % ------------------------
-% Exercicio 3
+% Exercicio 4
 % ------------------------
 
+figure
+plot(out.y.Time, out.y.Data, 'b')
+title("Resposta do sistema ao degrau (simulado no Simulink)")
+grid
+
+hold on;
+stairs(out.y_d.Time, out.y_d.Data, 'r');
+legend('Contínuo', 'Discreto')
+
+
+figure
+plot(out.x.Time, out.x.Data, 'b')
+title("Entrada da planta (simulado no Simulink)")
+grid
+
+hold on;
+stairs(out.x_d.Time, out.x_d.Data, 'r');
+legend('Contínuo', 'Discreto')
