@@ -34,28 +34,22 @@ T = 0.2241;
 T0 = 3*T;
 
 Gz = c2d(G, T0, 'zoh');
-[b_bruto, a_bruto] = tfdata(Gz, 'v');
+[b, a] = tfdata(Gz, 'v');
 
-% Alinha os coeficientes na base [1, z^-1, z^-2].
-% Como a planta e estritamente propria, b(1) deve ser zero.
-B = b_bruto;
-A = a_bruto;
-
-SB = sum(B);  % B(1), no sentido de avaliar B(z^-1) em z=1.
-assert(SB > 0, 'Soma dos coeficientes da planta deve ser positiva.');
+SB = sum(b);  % B(1), no sentido de avaliar B(z^-1) em z=1.
 
 fprintf('\n===== DISCRETIZACAO =====\n');
 fprintf('T0 = %.9f s\n', T0);
 fprintf('fs = %.9f Hz\n', 1/T0);
 fprintf('Gz = c2d(G,T0,''zoh''):\n');
 disp(Gz);
-fprintf('A(z^-1) = '); disp(A);
-fprintf('B(z^-1) = '); disp(B);
+fprintf('A(z^-1) = '); disp(a);
+fprintf('B(z^-1) = '); disp(b);
 
 %% 3) Dead-Beat de ordem nu = 2
 % Gz = B/A, Y/R = P, U/R = Q, com P=B/SB e Q=A/SB.
-P2 = B / SB;             % Coeficientes da FT desejada Y/R
-Q2 = A / SB;             % Coeficientes da FT desejada U/R
+P2 = b / SB;             % Coeficientes da FT desejada Y/R
+Q2 = a / SB;             % Coeficientes da FT desejada U/R
 DenC2 = [1 -P2(2:end)]; % 1 - P2(z^-1); P2(1) = 0
 C2 = tf(Q2, DenC2, T0, 'Variable', 'z^-1');
 
