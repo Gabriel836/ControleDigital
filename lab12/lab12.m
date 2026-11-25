@@ -1,4 +1,4 @@
-Ad = [0.8672 -00496; 0.0836 0.9977]
+Ad = [0.8672 -0.0496; 0.0836 0.9977]
 Bd = [0.0836; 0.0038]
 Cd = [0 0.5929]
 Dd = [0]
@@ -33,16 +33,18 @@ disp(L)
 
 %Gráficos
 figure
-plot(out.y.Time, out.y.Data, 'b')
-title("Resposta do sistema ao degrau (simulado no Simulink)")
+plot(out.yd.Time, out.yd.Data, 'b')
+title("Resposta do sistema ao degrau: saída real e estimada")
 grid
+hold on
+plot(out.yd_estimado.Time, out.yd_estimado.Data, 'r')
+legend('Real', 'Estimado', 'Location','best')
+hold off
 
 figure
-plot(out.x.Time, out.x.Data, 'b')
-title("Estados discretos do sistema (simulado no Simulink)")
+plot(out.xd.Time, out.xd.Data, 'b', 'DisplayName', 'Real')
+title("Estados discretos do sistema: real e estimado")
 grid
-
-figure
-plot(out.u.Time, out.u.Data, 'b')
-title("Entrada do sistema (simulado no Simulink)")
-grid
+hold on
+plot(out.xd_estimado.Time, out.xd_estimado.Data, 'r', 'DisplayName', 'Estimado')
+legend('Real', 'Estimado', 'Location', 'best')
